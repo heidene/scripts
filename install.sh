@@ -1,6 +1,7 @@
 #!/bin/bash
 
 cd $HOME
+git clone https://github.com/heidene/scripts.git scripts
 if xcode-select --install; then
   echo XCode-select installed
 else
@@ -16,8 +17,10 @@ else
 fi
 
 installHomebrew="curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh"
-if bash -c "$($installHomebrew)"  < /dev/tty; then
-  brew bundle install
+if bash -c "$($installHomebrew)"  < /dev/tty; then 
+  echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> $HOME/.zprofile
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+  brew bundle install --file=scripts/Brewfile
 else
   echo Failed installing Homebrew
   exit 1
