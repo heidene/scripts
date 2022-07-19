@@ -25,20 +25,27 @@ fi
 
 remote_install()
 {
-  CURL=$1
-  FAIL_MESSAGE=$2
-  SHOULD_EXIT="${$3:-FALSE}"
-  if bash -c "$($CURL)"  < /dev/tty; then
+  CMD="$1 $2 $3"
+  FAIL_MESSAGE=$4
+  SHOULD_EXIT=$5
+  echo $CMD $FAIL_MESSAGE $SHOULD_EXIT
+  if bash -c "$($CMD)"  < /dev/tty; then
     echo Done executing script
   else
     echo $FAIL_MESSAGE
-    if $SHOULD_EXIT == true; then 
+    if ${SHOULD_EXIT:-false} == true; then 
       exit 1
     fi
   fi
 }
 
 installSpacevim="curl -sLf https://spacevim.org/install.sh"
-remote_install $installSpacevim "Failled installing SpaceVim"
+if remote_install $installSpacevim "Failled installing SpaceVim"; then
+  vim  < /dev/tty
+fi
+
+git clone --bare https://github.com/heidene/dotfiles.git
+fish
+dotfilesNoTrack
 
 exit 0
